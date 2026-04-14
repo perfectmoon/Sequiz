@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["resources/js/*"]
+    },
+    "checkJs": false,
+    "jsx": "react-jsx",
+    "module": "ESNext",
+    "moduleResolution": "Node",
+
+    // Tambahan opsional untuk DX lebih baik
+    "target": "ESNext",
+    "allowSyntheticDefaultImports": true,
+    "allowJs": true
+  },
+  "include": [
+    "resources/js/**/*",
+    "resources/css/**/*",
+    "vite.config.js"
+  ],
+  "exclude": [
+    "node_modules",
+    "vendor",
+    "public"
+  ]
+}
