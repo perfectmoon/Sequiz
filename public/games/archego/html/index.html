@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ARCHEGO - Level Select</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+
+    /* ── INFO MODAL ── */
+    .info-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.88);
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+      backdrop-filter: blur(6px);
+    }
+    .info-overlay.open { opacity: 1; pointer-events: all; }
+
+    .info-modal {
+      position: relative;
+      background: var(--panel);
+      border: 1.5px solid var(--border);
+      border-radius: 18px;
+      width: 680px;
+      max-width: 92vw;
+      max-height: 85vh;
+      overflow-y: auto;
+      overflow-x: hidden;
+      transform: translateY(30px) scale(0.97);
+      transition: transform 0.35s cubic-bezier(0.23, 1, 0.32, 1);
+      scrollbar-width: thin;
+      scrollbar-color: var(--border) transparent;
+    }
+    .info-modal::-webkit-scrollbar { width: 4px; }
+    .info-modal::-webkit-scrollbar-track { background: transparent; margin: 18px 0; }
+    .info-modal::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+    .info-modal::-webkit-scrollbar-thumb:hover { background: var(--panel4); }
+    .info-modal::before, .info-modal::after {
+      content: ''; position: sticky; left: 0; right: 0; height: 32px;
+      display: block; pointer-events: none; z-index: 5; flex-shrink: 0;
+    }
+    .info-modal::before { top: 0; background: linear-gradient(to bottom, var(--panel), transparent); margin-bottom: -32px; }
+    .info-modal::after  { bottom: 0; background: linear-gradient(to top, var(--panel), transparent); margin-top: -32px; }
+    .info-overlay.open .info-modal { transform: translateY(0) scale(1); }
+
+    .info-modal-header { height: 4px; background: linear-gradient(90deg, var(--panel4), var(--blue3)); flex-shrink: 0; }
+    .info-modal-body { padding: 36px 40px 40px; }
+    .info-tag { font-size: 11px; letter-spacing: 3px; color: var(--blue3); text-transform: uppercase; font-weight: 700; margin-bottom: 10px; }
+    .info-title { font-family: 'Montserrat', sans-serif; font-size: 34px; font-weight: 900; color: var(--text); line-height: 1.05; margin-bottom: 6px; }
+    .info-subtitle { font-size: 15px; font-weight: 600; color: var(--panel4); letter-spacing: 0.5px; margin-bottom: 24px; }
+    .info-divider { height: 1.5px; background: var(--border); border-radius: 2px; margin-bottom: 24px; }
+    .info-section { margin-bottom: 28px; }
+    .info-section-title { font-size: 11px; letter-spacing: 2px; color: var(--blue3); text-transform: uppercase; font-weight: 700; margin-bottom: 10px; }
+    .info-section-text { font-size: 14px; color: var(--text2); line-height: 1.75; font-weight: 400; }
+    .info-section-text ul { list-style: none; padding: 0; margin: 0; }
+    .info-section-text li { margin-bottom: 8px; }
+    .info-close {
+      position: absolute; top: 14px; right: 16px;
+      width: 32px; height: 32px; border-radius: 50%;
+      border: 2.5px solid var(--border); background: var(--panel2);
+      color: var(--text2); font-size: 13px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s; z-index: 10;
+    }
+    .info-close:hover { border-color: var(--blue3); color: var(--blue3); }
+
+    /* ── ABOUT MODAL ── */
+    .about-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.88);
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+      backdrop-filter: blur(6px);
+    }
+    .about-overlay.open { opacity: 1; pointer-events: all; }
+
+    .about-modal {
+      position: relative;
+      background: var(--panel);
+      border: 1.5px solid var(--border);
+      border-radius: 18px;
+      width: 900px;
+      max-width: 94vw;
+      overflow: hidden;
+      transform: translateY(30px) scale(0.97);
+      transition: transform 0.35s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+    .about-overlay.open .about-modal { transform: translateY(0) scale(1); }
+
+    .about-modal-header { height: 4px; background: linear-gradient(90deg, var(--blue3), var(--panel4)); }
+
+    .about-close {
+      position: absolute; top: 14px; right: 16px;
+      width: 32px; height: 32px; border-radius: 50%;
+      border: 2.5px solid var(--border); background: var(--panel2);
+      color: var(--text2); font-size: 13px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s; z-index: 10;
+    }
+    .about-close:hover { border-color: var(--blue3); color: var(--blue3); }
+
+    .about-modal-body { padding: 44px 52px 52px; }
+
+    .about-eyebrow {
+      font-size: 10px; letter-spacing: 3px; color: var(--blue3);
+      text-transform: uppercase; font-weight: 700; margin-bottom: 14px;
+    }
+
+    .about-main-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 52px; font-weight: 900; color: var(--text);
+      line-height: 0.9; margin-bottom: 10px; letter-spacing: -1px;
+    }
+    .about-main-title span { color: var(--panel4); }
+
+    .about-divider-h { height: 1.5px; background: var(--border); margin: 28px 0; }
+
+    .about-desc { font-size: 15px; color: var(--text2); line-height: 1.85; font-weight: 400; }
+
+    @media (max-width: 700px) {
+      .about-modal-body { padding: 28px 24px 36px; }
+      .about-main-title { font-size: 36px; }
+    }
+
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a class="logo" href="#">ARCHEGO</a>
+    <button class="nav-btn">
+  <img src="../assets/btn-home.png" alt="Home">
+</button>
+<button class="nav-btn" id="btnInfoOpen">
+  <img src="../assets/btn-info.png" alt="Info">
+</button>
+<button class="nav-btn" id="btnAboutOpen">
+  <img src="../assets/btn-help.png" alt="Help">
+</button>
+  </nav>
+
+  <main>
+    <div class="section-header">
+      <div class="section-title">ARCHEGO</div>
+      <div class="section-tag">-Think Like a Machine-</div>
+      <div class="section-desc">Archego is a programming puzzle game where players think like a machine. Using a limited set of instructions, players design logical workflows that transform incoming data into precise results. Every level challenges players to break problems into small, structured steps, revealing how simple commands combine to form powerful algorithms.</div>
+    </div>
+
+    <div class="level-grid" id="levelGrid"></div>
+  </main>
+
+  <footer>ARCHEGO &mdash; INTERNSHIP PROJECT &mdash; 2026</footer>
+
+  <!-- LEVEL DETAIL OVERLAY -->
+  <div class="level-overlay" id="overlay">
+    <div class="level-modal">
+      <div class="modal-header"></div>
+      <button class="btn-close" id="btnClose">✕</button>
+      <div class="modal-body">
+        <div class="modal-num" id="modalNum">01</div>
+        <div class="modal-title" id="modalTitle">Level Title</div>
+        <div class="modal-desc" id="modalDesc">Deskripsi level.</div>
+        <div class="modal-stats">
+          <div class="stat-box">
+            <div class="stat-val" id="modalStars">★★</div>
+            <div class="stat-label">Level of difficulty</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-val" id="modalStatus">—</div>
+            <div class="stat-label">Status</div>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button class="btn-play" id="btnPlay">PLAY</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- INFO OVERLAY -->
+  <div class="info-overlay" id="infoOverlay">
+    <div class="info-modal">
+      <div class="info-modal-header"></div>
+      <button class="info-close" id="btnInfoClose">✕</button>
+      <div class="info-modal-body">
+
+        <div class="info-tag">About the Game</div>
+        <div class="info-title">ARCHEGO - INFORMATION </div>
+        <div class="info-subtitle">Think Like a Machine</div>
+        <div class="info-divider"></div>
+
+        <div class="info-section">
+          <div class="info-section-title">Instruction Explanation</div>
+          <div class="info-section-text">
+            <ul>
+              <li><strong>INBOX</strong>: Pick up a value from the input tray</li>
+              <li><strong>OUTBOX</strong>: Send the current value to the output tray</li>
+              <li><strong>COPYTO</strong>: Copy the current value to a memory slot</li>
+              <li><strong>COPYFROM</strong>: Pick up a value from a memory slot</li>
+              <li><strong>ADD</strong>: Add a memory slot's value to your current value</li>
+              <li><strong>SUB</strong>: Subtract a memory slot's value from your current value</li>
+              <li><strong>BUMP +</strong>: Increase a memory slot's value by 1 and pick it up</li>
+              <li><strong>BUMP -</strong>: Decrease a memory slot's value by 1 and pick it up</li>
+              <li><strong>JUMP</strong>: Jump to a specific step in your program</li>
+              <li><strong>JUMPIFZERO</strong>: Jump only if the current value is zero</li>
+              <li><strong>JUMPIFNEG</strong>: Jump only if the current value is negative</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="info-section">
+          <div class="info-section-title">FAQ</div>
+          <div class="info-section-text">
+            
+              If you have question, keep it for your self...
+          </div>
+        </div>
+
+        <div class="info-section">
+          <div class="info-section-title">Credit</div>
+          <div class="info-section-text">
+            <ul>
+              <li><strong>Gordon: </strong>I never said thank you.</li>
+              <li><strong>Batman: </strong>...And you'll never have to.</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ABOUT OVERLAY -->
+  <div class="about-overlay" id="aboutOverlay">
+    <div class="about-modal">
+      <div class="about-modal-header"></div>
+      <button class="about-close" id="btnAboutClose">✕</button>
+      <div class="about-modal-body">
+        <div class="about-main-title">HELP</div>
+        <div class="about-divider-h"></div>
+        <div class="about-desc">
+          "Our help is in the name of the Lord, who made heaven and earth" - Psalm 124:8
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/script.js"></script>
+  <script>
+    // INFO modal
+    const infoOverlay  = document.getElementById('infoOverlay');
+    const btnInfoOpen  = document.getElementById('btnInfoOpen');
+    const btnInfoClose = document.getElementById('btnInfoClose');
+
+    btnInfoOpen.addEventListener('click',  () => infoOverlay.classList.add('open'));
+    btnInfoClose.addEventListener('click', () => infoOverlay.classList.remove('open'));
+    infoOverlay.addEventListener('click',  (e) => { if (e.target === infoOverlay) infoOverlay.classList.remove('open'); });
+
+    // ABOUT modal
+    const aboutOverlay  = document.getElementById('aboutOverlay');
+    const btnAboutOpen  = document.getElementById('btnAboutOpen');
+    const btnAboutClose = document.getElementById('btnAboutClose');
+
+    btnAboutOpen.addEventListener('click',  () => aboutOverlay.classList.add('open'));
+    btnAboutClose.addEventListener('click', () => aboutOverlay.classList.remove('open'));
+    aboutOverlay.addEventListener('click',  (e) => { if (e.target === aboutOverlay) aboutOverlay.classList.remove('open'); });
+
+    // ESC closes both
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        infoOverlay.classList.remove('open');
+        aboutOverlay.classList.remove('open');
+      }
+    });
+  </script>
+</body>
+</html>

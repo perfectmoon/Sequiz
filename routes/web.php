@@ -14,6 +14,11 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\OtpController;
 use App\Http\Controllers\LeaderboardController;
 
+/*
+|--------------------------------------------------------------------------
+| STATIC PAGES
+|--------------------------------------------------------------------------
+*/
 $staticPages = ['/', '/about', '/features'];
 foreach ($staticPages as $page) {
     $name = ltrim($page, '/') ?: 'home';
@@ -21,7 +26,13 @@ foreach ($staticPages as $page) {
     Route::get($page, fn () => Inertia::render($file))->name($name);
 }
 
+/*
+|--------------------------------------------------------------------------
+| GUEST ROUTES
+|--------------------------------------------------------------------------
+*/
 Route::middleware('guest')->group(function () {
+
     Route::get('/register', fn () => Inertia::render('register'))->name("register");
     Route::post('/register', [RegisterController::class, 'store'])->middleware('throttle:5,1');
 
@@ -29,6 +40,7 @@ Route::middleware('guest')->group(function () {
     Route::post('/login', [AuthenticatedSessionController::class, 'store'])->middleware('throttle:5,1');
 
     Route::get('/forgot-password', fn () => Inertia::render('forgotpassword'))->name('password.request');
+
     Route::post('/forgot-password', function (Request $request) {
         $request->validate(['email' => ['required', 'email']]);
         $status = Password::sendResetLink($request->only('email'));
@@ -50,12 +62,14 @@ Route::middleware('guest')->group(function () {
             'email'    => 'required|email',
             'password' => 'required|min:8|confirmed',
         ]);
+
         $status = Password::reset(
             $request->only('email', 'password', 'password_confirmation', 'token'),
             function ($user, string $password) {
                 $user->forceFill(['password' => Hash::make($password)])->save();
             }
         );
+
         return $status === Password::PASSWORD_RESET
             ? redirect()->route('login')->with('status', __($status))
             : back()->withErrors(['email' => __($status)]);
@@ -66,9 +80,14 @@ Route::middleware('guest')->group(function () {
     Route::post('/otp/resend', [OtpController::class, 'resend'])->name('otp.resend');
 });
 
+/*
+|--------------------------------------------------------------------------
+| AUTH ROUTES
+|--------------------------------------------------------------------------
+*/
 Route::middleware('auth')->group(function () {
+
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
-    
     Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
 
     Route::get('/timer', fn () => Inertia::render('timer'))->name('timer');
@@ -77,7 +96,7 @@ Route::middleware('auth')->group(function () {
     Route::controller(QuizController::class)->group(function () {
         Route::get('/quiz', 'show')->name('quiz.show');
         Route::post('/quiz/generate', 'generate')->name('quiz.generate');
-        Route::post('/quiz/{session}/finish', 'finish')->name('quiz.finish'); 
+        Route::post('/quiz/{session}/finish', 'finish')->name('quiz.finish');
     });
 
     Route::controller(TaskController::class)->group(function () {
@@ -87,8 +106,56 @@ Route::middleware('auth')->group(function () {
         Route::put('/tasks/{task}', 'update');
         Route::delete('/tasks/{task}', 'destroy');
     });
+
+    /*
+    |--------------------------------------------------------------------------
+    | DASHBOARD (INERTIA)
+    |--------------------------------------------------------------------------
+    */
+    Route::get('/dashboard', function () {
+        return Inertia::render('dashboard');
+    })->name('dashboard');
+
+    /*
+    |--------------------------------------------------------------------------
+    | GAME LAUNCHER (OPTIONAL)
+    |--------------------------------------------------------------------------
+    */
+    Route::get('/launcher', function () {
+        return view('launcher');
+    });
+
+    /*
+    |--------------------------------------------------------------------------
+    | GAME EMBED SYSTEM 🔥
+    |--------------------------------------------------------------------------
+    */
+
+    // 🧠 ARCHEGO
+    Route::get('/play/archego', function () {
+        return view('embed-game', [
+            'title' => 'Archego',
+            'src'   => '/games/archego/html/index.html',
+            'theme' => '#0074D9'
+        ]);
+    })->name('play.archego');
+
+    // 🔐 OBSCURUM (nanti)
+    Route::get('/play/obscurum', function () {
+        return view('embed-game', [
+            'title' => 'Obscurum',
+            'src'   => 'http://localhost:8002',
+            'theme' => '#ef4444'
+        ]);
+    })->name('play.obscurum');
+
 });
 
+/*
+|--------------------------------------------------------------------------
+| DEBUG
+|--------------------------------------------------------------------------
+*/
 Route::get('/whoami', function () {
     return [
         'auth_id' => auth()->id(),

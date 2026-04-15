@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ARCHEGO - Level 1</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/game.css">
+</head>
+<body data-level="1">
+
+  <nav>
+    <a class="logo" href="index.html">ARCHEGO</a>
+    <button class="nav-back" onclick="window.location.href='index.html'">
+  <img src="../assets/btn-back.png" alt="Back">
+</button>
+    <span class="nav-title" id="navTitle">—</span>
+  </nav>
+
+  <div class="game-layout">
+
+    <!-- LEFT: Program Slot Area -->
+    <div class="panel panel-program">
+      <div class="panel-label">PROGRAM</div>
+      <div class="panel-subtitle" id="programDesc"></div>
+      <div class="program-slots-wrapper">
+        <div class="program-slots" id="programSlots"></div>
+        <svg class="arrow-svg" id="arrowSvg"></svg>
+      </div>
+    </div>
+
+    <!-- CENTER: Instruction Palette -->
+    <div class="panel panel-palette">
+      <div class="panel-label">INSTRUCTION</div>
+      <div class="palette-list" id="paletteList"></div>
+    </div>
+
+    <!-- RIGHT: IO + Memory -->
+    <div class="panel-right">
+      <div class="io-box">
+        <div class="io-label">INBOX</div>
+        <div class="io-tape" id="inboxTape"></div>
+      </div>
+      <div class="mem-box">
+        <div class="io-label">MEMORY</div>
+        <div class="mem-body">
+          <div class="mem-top-cell" id="memTopCell"></div>
+          <div class="mem-grid" id="memGrid"></div>
+        </div>
+      </div>
+      <div class="io-box">
+        <div class="io-label">OUTBOX</div>
+        <div class="io-tape" id="outboxTape"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="bottom-bar">
+    <button class="btn-clear" id="btnClear">
+      <img src="../assets/btn-clear.png" alt="Clear">
+    </button>
+    <button class="btn-step" id="btnStepBack" disabled>
+      <img src="../assets/btn-step-back.png" alt="Step Back">
+    </button>
+    <button class="btn-play" id="btnPlay">
+      <img src="../assets/btn-run.png" alt="Run">
+    </button>
+    <button class="btn-step" id="btnStepFwd" disabled>
+      <img src="../assets/btn-step-fwd.png" alt="Step Forward">
+    </button>
+    <button class="btn-stop" id="btnStop">
+      <img src="../assets/btn-stop.png" alt="Stop">
+    </button>
+</div>
+
+  <!-- Result modal -->
+  <div class="result-modal" id="resultModal">
+    <div class="result-modal-content">
+      <h2 class="result-modal-title" id="resultModalTitle">—</h2>
+      <p class="result-modal-msg" id="resultModalMsg"></p>
+      <div class="result-modal-actions" id="resultModalActions"></div>
+    </div>
+  </div>
+
+  <script src="../js/game.js"></script>
+</body>
+</html>

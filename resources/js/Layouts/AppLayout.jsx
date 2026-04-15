@@ -12,8 +12,12 @@ export default function AppLayout ({title, children}){
     )
 }
 function Shell({ children }) {
-  const { sharedValue, routes } = useLayout();
-  const { component, url } = usePage();
+  const layout = useLayout() || {};
+  const sharedValue = true;
+  const routes = layout.routes ?? [];
+  const page = usePage() || {};
+  const component = page.component ?? "";
+  const url = page.url ?? "";
   const hideHeaderComponents = [
     "DatabaseDown",
     'ResetPassword'
