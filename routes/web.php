@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\QuizController;
 use App\Http\Controllers\TaskController;
+use App\Http\Controllers\LevelController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\OtpController;
@@ -140,14 +141,19 @@ Route::middleware('auth')->group(function () {
         ]);
     })->name('play.archego');
 
-    // 🔐 OBSCURUM (nanti)
-    Route::get('/play/obscurum', function () {
-        return view('embed-game', [
-            'title' => 'Obscurum',
-            'src'   => 'http://localhost:8002',
-            'theme' => '#ef4444'
-        ]);
-    })->name('play.obscurum');
+    // 🔐 OBSCURUM LEVELS
+    Route::get('/obscurum', function () {
+        return redirect('/level/1');
+    });
+
+    Route::controller(LevelController::class)->group(function () {
+        Route::get('/level/{level}', 'show')->name('levels.show');
+        Route::post('/level/{level}/check', 'checkAnswer')->name('levels.check');
+        Route::post('/level/{level}/hint', 'getHint')->name('levels.hint');
+        Route::post('/reset-progress', 'resetProgress')->name('reset.progress');
+        Route::get('/debug-points', 'showPoints')->name('debug.points');
+        Route::get('/complete', 'complete')->name('levels.complete');
+    });
 
 });
 

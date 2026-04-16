@@ -29,8 +29,8 @@ class RegisterController extends Controller
     $otpKey      = "otp:register:{$email}";
     $attemptsKey = "otp:register:{$email}:attempts";
 
-    Cache::put($otpKey, $hashedOtp, now()->addMinutes(10));
-    Cache::put($attemptsKey, 0,       now()->addMinutes(10));
+    Cache::put($otpKey, $hashedOtp, now()->addMinutes(60));
+    Cache::put($attemptsKey, 0,       now()->addMinutes(60));
 
     
     Mail::raw("Your Sequiz verification code is: {$otp}", function ($message) use ($user) {
