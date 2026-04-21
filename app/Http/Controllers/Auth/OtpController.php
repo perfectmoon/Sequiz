@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Mail;
 class OtpController extends Controller
 {
     protected int $maxAttempts   = 5;
-    protected int $otpTtlMinutes = 10;
+    protected int $otpTtlMinutes = 60;
     protected int $resendLimit   = 3;
 
     private function otpKey(string $email): string

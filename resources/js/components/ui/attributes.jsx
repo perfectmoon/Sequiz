@@ -456,3 +456,23 @@ export const ProfileIcon = ({ className = "" }) => {
   )
 }
 
+export const ArchegoLogo = () => {
+  return (
+    <img
+      src="/assets/archego.png"
+      alt="Archego"
+      className="w-full h-full object-contain"
+    />
+  )
+}
+
+export const ObscurumLogo = () => {
+  return (
+    <img
+      src="/assets/obscurum.png"
+      alt="Obscurum"
+      className="w-full h-full object-contain"
+    />
+  )
+}
+

@@ -4,7 +4,7 @@ import { AnimatePresence, delay, motion } from 'framer-motion';
 import { Link, usePage } from '@inertiajs/react'
 import { router } from '@inertiajs/react';
 import { useLayout } from "@/Layouts/LayoutContext";
-import { Search, SignIn, LearnMore, PersonalComputer, Pencil, Book, Clock } from '@/components/ui/attributes';
+import { Search, SignIn, LearnMore, PersonalComputer, Pencil, Book, Clock, ArchegoLogo, ObscurumLogo } from '@/components/ui/attributes';
 import { truncate } from '@/lib/utils';
 
 export default function HomeSkeleton({buttonDelay}) {
@@ -20,164 +20,122 @@ export default function HomeSkeleton({buttonDelay}) {
     const username = truncate(user?.name) ?? 'Guest';
   const size = {sizeAll:2, sizePencil:3};
   return (
-    <motion.div 
-      key='home'
-      animate={{translateX:0, translateY:0, scale:1}}
-      exit={{translateX:-1500, translateY:100 ,scale:0.5}}
-      transition={{duration:0.8, ease:'easeInOut'}}
-      className="fixed inset-0 flex flex-col">
-        <div className='min-h-full'>
-          <div className='flex h-[10%] w-full'/> 
-          <div className='flex flex-row w-[100%] h-[15%]'>          
-            <div className='flex justify-center items-center w-[20%] h-full'>
-              <button
-              className='outline-green-600 ring-white ring-4 duration-75 ease-in-out bg-green-700/80 outline-2 w-[100px] text-white text-xl h-[50px] rounded-2xl'>
-                {username}
-              </button>       
-            </div>
-          </div>
-          <div className="flex justify-center items-center flex-col h-[75%] rounded-2xl text-8xl [-webkit-text-stroke:0.4px_white] [text-shadow:_4px_4px_0_#000] font-extralight text-white">
-            <motion.div 
-              initial={isHomeActive&&{
-                opacity:0, 
-                x:-100
-              }}
-              animate={{
-                opacity:1, 
-                x:0
-              }}
-              transition={{duration:1}}
-              className='flex flex-col justify-center items-center'>
-                <p>
-                Hello! 
-                </p>
-                <p>
-                Welcome to <span className='text-green-500 [text-shadow:_4px_4px_0_#fff]'>Sequiz!</span>
-                </p>
-              </motion.div>
-              <div className='flex flex-row w-full h-full'>
-                <div className='flex flex-col items-center w-[25%] h-full justify-baseline'>{
-                  !isHomeActive&&(
-                    <motion.div 
-                    initial={{
-                      scale:0, 
-                      opacity:0,
-                    }}
-                    animate={{
-                      scale:1, 
-                      opacity:1,
-                    }}
-                    transition={{
-                      duration:0.9, 
-                      ease:'circOut',
-                      type:'spring',
-                      delay:buttonDelay
-                    }}
-                    className='flex flex-col w-[35%] h-full justify-center items-center'>
-                      <Search/>
-                    </motion.div>
-                  )}
-                </div>
-                <div className='flex justify-between w-[50%] pt-5'>
-                  {
-                    username=='Guest'?(
-                    <>
-                      <motion.button 
-                      onClick={()=>router.visit('/login')}
-                      initial={{
-                        scale:0, 
-                        opacity:0,
-                      }}
-                      animate={{
-                        scale:1, 
-                        opacity:1,
-                      }}
-                      transition={{
-                        duration:0.9, 
-                        ease:'circOut',
-                        type:'spring',
-                        delay:buttonDelay??0
-                      }}
-                      className='w-[300px] h-[100px]'>
-                        <SignIn/>
-                      </motion.button>
-                      <motion.button 
-                      initial={{
-                        scale:0, 
-                        opacity:0,
-                      }}
-                      animate={{
-                        scale:1, 
-                        opacity:1,
-                      }}
-                      transition={{
-                        duration:0.9, 
-                        ease:'easeInOut', 
-                        type:'spring', 
-                        delay:buttonDelay??0.2
-                      }}
-                      className='w-[300px] h-[100px]'>
-                          <Link href={'/about'}>
-                              <LearnMore/>
-                          </Link>
-                      </motion.button>
-                    </>  
-                    ):(
-                      <>
-                        <motion.div 
-                        initial={{opacity:0,translateX:700}}
-                        animate={{opacity:1,translateX:0}}
-                        transition={{duration:1, ease:'easeOut'}}
-                        className="flex flex-col w-full items-center justify-baseline h-full gap-6">
-                          <motion.div
-                          onClick={()=>router.visit('/quiz')}
-                          onHoverStart={()=>setToDo(true)} 
-                          onHoverEnd={()=>setToDo(false)}
-                          className="flex justify-center items-center gap-x-3 pr-5 hover:opacity-75 cursor-pointer hover:scale-102 transition duration-500 ease-in-out w-[175px] h-[175px] bg-gradient from-green-800 to-transparent">
-                            <motion.img 
-                            animate={{
-                            x: [0, 50, 0],
-                            y: [0, 30, 0],       
-                            rotate: [0, -0.2, 9,0], 
-                          }}
-                          transition={{
-                            duration: 2,
-                            repeat: Infinity,
-                            ease: "easeInOut",
-                          }}
-                          whileHover={{rotate:780}}
-                          className='w-full h-full object-contain hover:animate-pulse hover:scale-90 duration-75' src='/assets/search.png'/>
-                          </motion.div>
-                            <p className="text-4xl">
-                              Play the Trivia! 
-                            </p>
-                          </motion.div>
-                        </> 
-                      )
-                    }
-                </div>  
-                <div className='flex flex-row w-[25%] h-full justify-center'>
-                  <motion.div 
-                  initial={isHomeActive&&{
-                    scale:0, 
-                    opacity:0
-                  }}
-                  animate={{
-                    scale:1, 
-                    opacity:1
-                  }}
-                  transition={{
-                    duration:0.9, 
-                    ease:'circOut',
-                    type:'spring'
-                  }}
-                  className='w-[180px] h-[170px]'>
-                    <PersonalComputer/>
-                  </motion.div>
-                </div>
-            </div>
-          </div>
+    <div style={{
+      width: '100vw',
+      height: '100vh',
+      display: 'flex',
+      flexDirection: 'column',
+      backgroundColor: '#000',
+      padding: '20px'
+    }}>
+      {/* Username button */}
+      <div style={{display: 'flex', justifyContent: 'flex-start', marginBottom: '20px'}}>
+        <button style={{
+          padding: '10px 20px',
+          backgroundColor: 'rgba(21, 128, 61, 0.5)',
+          color: 'white',
+          border: '2px solid white',
+          borderRadius: '16px',
+          fontSize: '18px',
+          cursor: 'pointer'
+        }}>
+          {username}
+        </button>
+      </div>
+
+      {/* Main content - scrollable if needed */}
+      <div style={{
+        flex: 1,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        gap: '40px'
+      }}>
+        {/* Text greeting */}
+        <div style={{
+          textAlign: 'center',
+          fontSize: '48px',
+          color: 'white',
+          fontWeight: 'light',
+          textShadow: '2px 2px 4px rgba(0,0,0,0.8)'
+        }}>
+          <p>Hello!</p>
+          <p>Welcome to <span style={{color: '#22c55e'}}>Sequiz!</span></p>
         </div>
-      </motion.div>
+
+        {/* Buttons */}
+        <div style={{display: 'flex', gap: '32px', justifyContent: 'center', flexWrap: 'wrap'}}>
+          {/* ARCHEGO Button */}
+          <button
+            onClick={() => router.visit('/play/archego')}
+            style={{
+              width: '175px',
+              height: '200px',
+              backgroundColor: 'rgba(20, 83, 45, 0.4)',
+              border: '2px solid rgba(34, 197, 94, 0.5)',
+              borderRadius: '16px',
+              cursor: 'pointer',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center',
+              padding: '0',
+              overflow: 'hidden'
+            }}
+          >
+            <div style={{width: '100px', height: '100px'}}>
+              <ArchegoLogo/>
+            </div>
+            <p style={{fontSize: '20px', marginTop: '16px', color: '#86efac', fontFamily: 'monospace', margin: '0px'}}>ARCHEGO</p>
+          </button>
+
+          {/* QUIZ Button */}
+          <button
+            onClick={() => router.visit('/quiz')}
+            style={{
+              width: '175px',
+              height: '200px',
+              backgroundColor: 'rgba(20, 83, 45, 0.4)',
+              border: '2px solid rgba(34, 197, 94, 0.5)',
+              borderRadius: '16px',
+              cursor: 'pointer',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center',
+              padding: '0'
+            }}
+          >
+            <p style={{fontSize: '60px', margin: '0px'}}>🔭</p>
+            <p style={{fontSize: '20px', marginTop: '16px', color: '#86efac', fontFamily: 'monospace', margin: '0px'}}>QUIZ</p>
+          </button>
+
+          {/* OBSCURUM Button */}
+          <button
+            onClick={() => router.visit('/obscurum')}
+            style={{
+              width: '175px',
+              height: '200px',
+              backgroundColor: 'rgba(20, 83, 45, 0.4)',
+              border: '2px solid rgba(34, 197, 94, 0.5)',
+              borderRadius: '16px',
+              cursor: 'pointer',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center',
+              padding: '0',
+              overflow: 'hidden'
+            }}
+          >
+            <div style={{width: '100px', height: '100px'}}>
+              <ObscurumLogo/>
+            </div>
+            <p style={{fontSize: '20px', marginTop: '16px', color: '#86efac', fontFamily: 'monospace', margin: '0px'}}>OBSCURUM</p>
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }
