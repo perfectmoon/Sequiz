@@ -4,7 +4,7 @@ import { AnimatePresence, delay, motion } from 'framer-motion';
 import { Link, usePage } from '@inertiajs/react'
 import { router } from '@inertiajs/react';
 import { useLayout } from "@/Layouts/LayoutContext";
-import { Search, SignIn, LearnMore, PersonalComputer, Pencil, Book, Clock } from '@/components/ui/attributes';
+import { Search, SignIn, LearnMore, PersonalComputer, Pencil, Book, Clock, ArchegoLogo, ObscurumLogo } from '@/components/ui/attributes';
 import { truncate } from '@/lib/utils';
 
 export default function HomeSkeleton({buttonDelay}) {
@@ -19,10 +19,6 @@ export default function HomeSkeleton({buttonDelay}) {
     const user = auth?.user ?? null;
     const username = truncate(user?.name) ?? 'Guest';
   const size = {sizeAll:2, sizePencil:3};
-  console.log('=== RENDERING ===');
-console.log('Username:', username);
-console.log('Is Guest:', username == 'Guest');
-console.log('Will show:', username == 'Guest' ? 'Guest buttons' : 'Logged in buttons (Archego, Obscurum, Trivia)');
   return (
     <div style={{
       width: '100vw',
@@ -70,6 +66,7 @@ console.log('Will show:', username == 'Guest' ? 'Guest buttons' : 'Logged in but
 
         {/* Buttons */}
         <div style={{display: 'flex', gap: '32px', justifyContent: 'center', flexWrap: 'wrap'}}>
+          {/* ARCHEGO Button */}
           <button
             onClick={() => router.visit('/play/archego')}
             style={{
@@ -83,33 +80,17 @@ console.log('Will show:', username == 'Guest' ? 'Guest buttons' : 'Logged in but
               flexDirection: 'column',
               justifyContent: 'center',
               alignItems: 'center',
-              padding: '0'
+              padding: '0',
+              overflow: 'hidden'
             }}
           >
-            <span style={{fontSize: '48px', color: 'white', fontWeight: 'bold'}}>A</span>
-            <p style={{fontSize: '20px', marginTop: '16px', color: '#86efac', fontFamily: 'monospace', margin: '0px'}}>Archego</p>
+            <div style={{width: '100px', height: '100px'}}>
+              <ArchegoLogo/>
+            </div>
+            <p style={{fontSize: '20px', marginTop: '16px', color: '#86efac', fontFamily: 'monospace', margin: '0px'}}>ARCHEGO</p>
           </button>
 
-          <button
-            onClick={() => router.visit('/obscurum')}
-            style={{
-              width: '175px',
-              height: '200px',
-              backgroundColor: 'rgba(88, 28, 135, 0.4)',
-              border: '2px solid rgba(168, 85, 247, 0.5)',
-              borderRadius: '16px',
-              cursor: 'pointer',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-              alignItems: 'center',
-              padding: '0'
-            }}
-          >
-            <span style={{fontSize: '40px'}}>🚩</span>
-            <p style={{fontSize: '20px', marginTop: '16px', color: '#86efac', fontFamily: 'monospace', margin: '0px'}}>Obscurum</p>
-          </button>
-
+          {/* QUIZ Button */}
           <button
             onClick={() => router.visit('/quiz')}
             style={{
@@ -126,12 +107,32 @@ console.log('Will show:', username == 'Guest' ? 'Guest buttons' : 'Logged in but
               padding: '0'
             }}
           >
-            <img 
-              src='/assets/search.png'
-              alt='Trivia'
-              style={{width: '100px', height: '100px', objectFit: 'contain'}}
-            />
-            <p style={{fontSize: '20px', marginTop: '16px', color: '#86efac', fontFamily: 'monospace', margin: '0px'}}>Trivia</p>
+            <p style={{fontSize: '60px', margin: '0px'}}>🔭</p>
+            <p style={{fontSize: '20px', marginTop: '16px', color: '#86efac', fontFamily: 'monospace', margin: '0px'}}>QUIZ</p>
+          </button>
+
+          {/* OBSCURUM Button */}
+          <button
+            onClick={() => router.visit('/obscurum')}
+            style={{
+              width: '175px',
+              height: '200px',
+              backgroundColor: 'rgba(20, 83, 45, 0.4)',
+              border: '2px solid rgba(34, 197, 94, 0.5)',
+              borderRadius: '16px',
+              cursor: 'pointer',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center',
+              padding: '0',
+              overflow: 'hidden'
+            }}
+          >
+            <div style={{width: '100px', height: '100px'}}>
+              <ObscurumLogo/>
+            </div>
+            <p style={{fontSize: '20px', marginTop: '16px', color: '#86efac', fontFamily: 'monospace', margin: '0px'}}>OBSCURUM</p>
           </button>
         </div>
       </div>

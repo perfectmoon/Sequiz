@@ -458,17 +458,21 @@ export const ProfileIcon = ({ className = "" }) => {
 
 export const ArchegoLogo = () => {
   return (
-    <div className="w-full h-full bg-green-500 rounded-2xl flex items-center justify-center">
-      <span className="text-white text-4xl font-bold">A</span>
-    </div>
+    <img
+      src="/assets/archego.png"
+      alt="Archego"
+      className="w-full h-full object-contain"
+    />
   )
 }
 
 export const ObscurumLogo = () => {
   return (
-    <div className="w-full h-full bg-purple-500 rounded-2xl flex items-center justify-center">
-      <span className="text-white text-4xl font-bold">O</span>
-    </div>
+    <img
+      src="/assets/obscurum.png"
+      alt="Obscurum"
+      className="w-full h-full object-contain"
+    />
   )
 }
 
