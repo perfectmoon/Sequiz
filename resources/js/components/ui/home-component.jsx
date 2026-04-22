@@ -25,7 +25,7 @@ export default function HomeSkeleton({buttonDelay}) {
       height: '100vh',
       display: 'flex',
       flexDirection: 'column',
-      backgroundColor: '#000',
+      backgroundColor: 'transparent',
       padding: '20px'
     }}>
       {/* Username button */}
@@ -90,7 +90,7 @@ export default function HomeSkeleton({buttonDelay}) {
             <p style={{fontSize: '20px', marginTop: '16px', color: '#86efac', fontFamily: 'monospace', margin: '0px'}}>ARCHEGO</p>
           </button>
 
-          {/* QUIZ Button */}
+          {/* SEQUIZ Button — FIX: label "QUIZ" → "SEQUIZ" */}
           <button
             onClick={() => router.visit('/quiz')}
             style={{
@@ -108,12 +108,12 @@ export default function HomeSkeleton({buttonDelay}) {
             }}
           >
             <p style={{fontSize: '60px', margin: '0px'}}>🔭</p>
-            <p style={{fontSize: '20px', marginTop: '16px', color: '#86efac', fontFamily: 'monospace', margin: '0px'}}>QUIZ</p>
+            <p style={{fontSize: '20px', marginTop: '16px', color: '#86efac', fontFamily: 'monospace', margin: '0px'}}>SEQUIZ</p>
           </button>
 
           {/* OBSCURUM Button */}
           <button
-            onClick={() => router.visit('/obscurum')}
+            onClick={() => window.location.href = 'http://127.0.0.1:8001'}
             style={{
               width: '175px',
               height: '200px',

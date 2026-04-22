@@ -41,8 +41,7 @@ const MatrixBackground = () => {
     window.addEventListener("resize", resize);
     resize();
 
-    const chars =
-      'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$+-*/=%"\'#&_(),.;:?!\\|{}<>[]^~';
+    const chars = `ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$+-*/=%"\\'#&_(),.;:?!\\|{}<>[]^~`;
 
     const BASE_FONT = 16;
 
@@ -69,12 +68,11 @@ const MatrixBackground = () => {
       rows = newRows;
     };
 
-    // Fungsi bantu lerp warna (hijau → merah)
+    // FIX: lerpColor yang benar — default hijau terang, transisi ke merah
     const lerpColor = (t) => {
-        const r = 255 ; // 255→0
-        const g = Math.round(255 - 255*t);                       // tetap hijau terang
-        const b = 0;
-    //   const b = Math.round(0 + 0 * t);
+      const r = Math.round(0 + 255 * t);    // 0 saat hijau → 255 saat merah
+      const g = Math.round(255 - 255 * t);  // 255 saat hijau → 0 saat merah
+      const b = 0;
       return `rgb(${r},${g},${b})`;
     };
 
@@ -119,7 +117,7 @@ const MatrixBackground = () => {
   }, []);
 
   return (
-    <canvas ref={canvasRef} className="matrix-background absolute inset-0 -z-10" />
+    <canvas ref={canvasRef} className="fixed top-0 left-0 w-full h-full -z-10 pointer-events-none" />
   );
 };
 

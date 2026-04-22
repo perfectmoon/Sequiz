@@ -458,21 +458,29 @@ export const ProfileIcon = ({ className = "" }) => {
 
 export const ArchegoLogo = () => {
   return (
-    <img
-      src="/assets/archego.png"
-      alt="Archego"
-      className="w-full h-full object-contain"
-    />
+    <svg viewBox="0 0 100 100" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+      <rect width="100" height="100" rx="12" fill="rgba(0,116,217,0.2)" stroke="#0074D9" strokeWidth="2"/>
+      <text x="50" y="38" textAnchor="middle" fill="#60a5fa" fontSize="11" fontFamily="monospace" fontWeight="bold">ARCH</text>
+      <text x="50" y="55" textAnchor="middle" fill="#93c5fd" fontSize="11" fontFamily="monospace" fontWeight="bold">EGO</text>
+      <polygon points="50,65 38,85 62,85" fill="none" stroke="#0074D9" strokeWidth="2"/>
+      <line x1="50" y1="65" x2="50" y2="85" stroke="#60a5fa" strokeWidth="1.5"/>
+      <line x1="38" y1="85" x2="62" y2="85" stroke="#60a5fa" strokeWidth="1.5"/>
+    </svg>
   )
 }
 
 export const ObscurumLogo = () => {
   return (
-    <img
-      src="/assets/obscurum.png"
-      alt="Obscurum"
-      className="w-full h-full object-contain"
-    />
+    <svg viewBox="0 0 100 100" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+      <rect width="100" height="100" rx="12" fill="rgba(139,92,246,0.15)" stroke="#7c3aed" strokeWidth="2"/>
+      <circle cx="50" cy="42" r="16" fill="none" stroke="#a78bfa" strokeWidth="2"/>
+      <circle cx="50" cy="42" r="6" fill="#7c3aed"/>
+      <text x="50" y="72" textAnchor="middle" fill="#a78bfa" fontSize="9" fontFamily="monospace" fontWeight="bold">OBSCURUM</text>
+      <line x1="30" y1="42" x2="34" y2="42" stroke="#a78bfa" strokeWidth="1.5"/>
+      <line x1="66" y1="42" x2="70" y2="42" stroke="#a78bfa" strokeWidth="1.5"/>
+      <line x1="50" y1="22" x2="50" y2="26" stroke="#a78bfa" strokeWidth="1.5"/>
+      <line x1="50" y1="58" x2="50" y2="62" stroke="#a78bfa" strokeWidth="1.5"/>
+    </svg>
   )
 }
 

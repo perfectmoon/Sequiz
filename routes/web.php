@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Hash;
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\QuizController;
-use App\Http\Controllers\TaskController;
 use App\Http\Controllers\LevelController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
@@ -100,14 +99,6 @@ Route::middleware('auth')->group(function () {
         Route::post('/quiz/{session}/finish', 'finish')->name('quiz.finish');
     });
 
-    Route::controller(TaskController::class)->group(function () {
-        Route::get('/todolist', 'index')->name('todolist');
-        Route::get('/schedule', 'schedule')->name('schedule');
-        Route::post('/tasks', 'store');
-        Route::put('/tasks/{task}', 'update');
-        Route::delete('/tasks/{task}', 'destroy');
-    });
-
     /*
     |--------------------------------------------------------------------------
     | DASHBOARD (INERTIA)
@@ -128,11 +119,11 @@ Route::middleware('auth')->group(function () {
 
     /*
     |--------------------------------------------------------------------------
-    | GAME EMBED SYSTEM 🔥
+    | GAME EMBED SYSTEM
     |--------------------------------------------------------------------------
     */
 
-    // 🧠 ARCHEGO
+    // ARCHEGO — internal static files
     Route::get('/play/archego', function () {
         return view('embed-game', [
             'title' => 'Archego',
@@ -141,9 +132,9 @@ Route::middleware('auth')->group(function () {
         ]);
     })->name('play.archego');
 
-    // 🔐 OBSCURUM LEVELS
-    Route::get('/obscurum', function () {
-        return redirect('/level/1');
+    // OBSCURUM — external project on port 8001
+    Route::get('/play/obscurum', function () {
+        return redirect('http://127.0.0.1:8001');
     });
 
     Route::controller(LevelController::class)->group(function () {

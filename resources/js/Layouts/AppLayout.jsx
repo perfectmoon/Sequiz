@@ -4,50 +4,54 @@ import MatrixBackground from "../components/ui/matrix-background";
 import { LayoutProvider, useLayout } from "./LayoutContext";
 import { usePage } from "@inertiajs/react";
 import Direction from "@/components/ui/direction";
-export default function AppLayout ({title, children}){
-    return(
-    <LayoutProvider>
-      <Shell>{children}</Shell>
-    </LayoutProvider>
+
+export default function AppLayout({ title, children }) {
+    return (
+        <LayoutProvider>
+            <Shell>{children}</Shell>
+        </LayoutProvider>
     )
 }
-function Shell({ children }) {
-  const layout = useLayout() || {};
-  const sharedValue = true;
-  const routes = layout.routes ?? [];
-  const page = usePage() || {};
-  const component = page.component ?? "";
-  const url = page.url ?? "";
-  const hideHeaderComponents = [
-    "DatabaseDown",
-    'ResetPassword'
-  ];
 
-  const hideHeaderUrls = [
-    "/login",
-    "/register",
-    '/verify-otp',
-    '/forgot-password',
-    "/quiz",
-  ];
+function Shell({ children }) {
+    const layout = useLayout() || {};
+    const { sharedValue } = layout; // FIX: dari context, bukan hardcode true
+    const routes = layout.routes ?? [];
+    const page = usePage() || {};
+    const component = page.component ?? "";
+    const url = page.url ?? "";
+
+    const hideHeaderComponents = [
+        "DatabaseDown",
+        'ResetPassword'
+    ];
+
+    const hideHeaderUrls = [
+        "/login",
+        "/register",
+        '/verify-otp',
+        '/forgot-password',
+        "/quiz",
+    ];
 
     const shouldHideHeader =
         hideHeaderComponents.includes(component) ||
         hideHeaderUrls.includes(url);
 
-  const urlCheck = routes.includes(url)
-  return (
-    <div className="fixed inset-0 overflow-y-auto bg-green-700 w-full h-dvh flex flex-col bg-cover">
+    const urlCheck = routes.includes(url);
+
+    return (
+        <div className="fixed inset-0 overflow-y-auto bg-green-700 w-full h-dvh flex flex-col bg-cover">
             {
-              !shouldHideHeader&&
-              (
-              <>
-                <Direction/>
-                <Header/>
-              </>
-            )
+                !shouldHideHeader &&
+                (
+                    <>
+                        <Direction />
+                        <Header />
+                    </>
+                )
             }
-            <MatrixBackground active={sharedValue}/>
+            <MatrixBackground active={sharedValue} />
             <FlickeringGrid
                 className="absolute inset-0 -z-10"
                 squareSize={5}
@@ -60,5 +64,5 @@ function Shell({ children }) {
                 {children}
             </main>
         </div>
-  );
+    );
 }

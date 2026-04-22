@@ -94,7 +94,7 @@
 </head>
 <body>
     <div class="game-bar">
-        <a href="{{ route('dashboard') }}" class="game-bar-back">
+        <a href="{{ route('home') }}" class="game-bar-back">
             ← HUB
         </a>
         <div class="game-bar-dot"></div>
