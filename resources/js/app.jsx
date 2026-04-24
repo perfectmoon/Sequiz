@@ -2,6 +2,7 @@
 import { createRoot } from "react-dom/client";
 import { createInertiaApp } from "@inertiajs/react";
 import AppLayout from './Layouts/AppLayout';
+import '../css/app.css';
 
 createInertiaApp({
   resolve: async (name) => {

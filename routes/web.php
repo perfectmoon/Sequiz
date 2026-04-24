@@ -16,15 +16,22 @@ use App\Http\Controllers\LeaderboardController;
 
 /*
 |--------------------------------------------------------------------------
+| ROOT (IMPORTANT)
+|--------------------------------------------------------------------------
+*/
+Route::get('/', function () {
+    return auth()->check()
+        ? redirect('/dashboard')
+        : redirect('/login');
+});
+
+/*
+|--------------------------------------------------------------------------
 | STATIC PAGES
 |--------------------------------------------------------------------------
 */
-$staticPages = ['/', '/about', '/features'];
-foreach ($staticPages as $page) {
-    $name = ltrim($page, '/') ?: 'home';
-    $file = $name === 'home' ? 'home' : $name;
-    Route::get($page, fn () => Inertia::render($file))->name($name);
-}
+Route::get('/about', fn () => Inertia::render('about'))->name('about');
+Route::get('/features', fn () => Inertia::render('features'))->name('features');
 
 /*
 |--------------------------------------------------------------------------
@@ -43,7 +50,9 @@ Route::middleware('guest')->group(function () {
 
     Route::post('/forgot-password', function (Request $request) {
         $request->validate(['email' => ['required', 'email']]);
+
         $status = Password::sendResetLink($request->only('email'));
+
         return $status === Password::RESET_LINK_SENT
             ? back()->with('status', __($status))
             : back()->withErrors(['email' => __($status)]);
@@ -66,7 +75,9 @@ Route::middleware('guest')->group(function () {
         $status = Password::reset(
             $request->only('email', 'password', 'password_confirmation', 'token'),
             function ($user, string $password) {
-                $user->forceFill(['password' => Hash::make($password)])->save();
+                $user->forceFill([
+                    'password' => Hash::make($password)
+                ])->save();
             }
         );
 
@@ -93,6 +104,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/timer', fn () => Inertia::render('timer'))->name('timer');
     Route::get('/leaderboard', [LeaderboardController::class, 'index'])->name('leaderboard.index');
 
+    /*
+    |--------------------------------------------------------------------------
+    | QUIZ
+    |--------------------------------------------------------------------------
+    */
     Route::controller(QuizController::class)->group(function () {
         Route::get('/quiz', 'show')->name('quiz.show');
         Route::post('/quiz/generate', 'generate')->name('quiz.generate');
@@ -101,39 +117,35 @@ Route::middleware('auth')->group(function () {
 
     /*
     |--------------------------------------------------------------------------
-    | DASHBOARD (INERTIA)
+    | DASHBOARD (MAIN HUB)
     |--------------------------------------------------------------------------
     */
     Route::get('/dashboard', function () {
-        return view('dashboard'); 
+        return Inertia::render('dashboard');
     })->name('dashboard');
 
     /*
     |--------------------------------------------------------------------------
-    | GAME LAUNCHER (OPTIONAL)
-    |--------------------------------------------------------------------------
-    */
-    Route::get('/launcher', function () {
-        return view('launcher');
-    });
-
-    /*
-    |--------------------------------------------------------------------------
-    | GAME EMBED SYSTEM
+    | GAME ROUTES
     |--------------------------------------------------------------------------
     */
 
-    // ARCHEGO — internal static files
+    // Archego (local static)
     Route::get('/play/archego', function () {
         return redirect('/games/archego/html/index.html');
     });
 
-    // OBSCURUM — external project on port 8001
+    // Obscurum (external Laravel di port 8001)
     Route::get('/play/obscurum', function () {
-        return redirect('/level/1'); // ← sesuaikan URL Obscurum (bisa juga pakai view embed-game jika ingin iframe)
+        return redirect('http://127.0.0.1:8001');
     });
 
-    Route::controller(LevelController::class)->group(function () {  
+    /*
+    |--------------------------------------------------------------------------
+    | OBSCURUM INTERNAL (kalau mau embed nanti)
+    |--------------------------------------------------------------------------
+    */
+    Route::controller(LevelController::class)->group(function () {
         Route::get('/level/{level}', 'show')->name('levels.show');
         Route::post('/level/{level}/check', 'checkAnswer')->name('levels.check');
         Route::post('/level/{level}/hint', 'getHint')->name('levels.hint');
