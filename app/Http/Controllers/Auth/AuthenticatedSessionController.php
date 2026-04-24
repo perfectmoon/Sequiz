@@ -39,7 +39,10 @@ class AuthenticatedSessionController extends Controller
         
         $request->session()->regenerate();
 
-        return redirect()->intended('/');
+        return redirect()->to('/dashboard')->withHeaders([
+            'Refresh' => '1', // This forces browser refresh
+            'X-Inertia' => 'false'
+        ]);
     }
 
     public function destroy(Request $request): RedirectResponse {

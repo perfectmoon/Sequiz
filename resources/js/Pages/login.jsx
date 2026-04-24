@@ -30,7 +30,7 @@ export default function Login() {
             },
             {
                 onFinish: () => {
-                    setIsLoading(false);
+                    window.location.replace('/dashboard');
                 },
             }
         );

@@ -16,8 +16,6 @@
   - Navigasi pakai keyboard (←/→) dan klik
   =====================================================================
 --}}
-
-<x-app-layout>
 <head>
     <style>
         /* ── GLOBAL RESET & FONT ── */
@@ -76,8 +74,8 @@
         .hub-user strong { color: #fff; }
         .hub-logout {
             font-size: 12px;
-            color: rgba(255,255,255,0.4);
-            border: 1px solid rgba(255,255,255,0.15);
+            color: rgba(176, 78, 78, 0.4);
+            border: 1px solid rgba(255,255,255,1);
             padding: 5px 14px;
             border-radius: 6px;
             text-decoration: none;
@@ -369,6 +367,9 @@
 </div>
 
 <script>
+    if (window.self !== window.top) {
+        window.top.location = '/dashboard';
+    }
     // =====================================================================
     // KONFIGURASI GAMES - Edit bagian ini untuk sesuaikan URL & info
     // =====================================================================
@@ -376,11 +377,11 @@
         {
             id: 'sequiz',
             name: 'SEQUIZ',
-            sub: 'Quiz & Astronomy',
+            sub: 'CyberSecurity Quiz',
             tag: 'BY SEQUIZ',
-            desc: 'Game kuis interaktif bertema astronomi. Jawab pertanyaan-pertanyaan seru tentang alam semesta dan buktikan pengetahuanmu!',
+            desc: 'Game kuis interaktif bertema Cyber Security. Jawab pertanyaan-pertanyaan seru tentang Syber Security dan buktikan pengetahuanmu!',
             icon: '🔭',
-            url: '/sequiz',          // ← sesuaikan route Sequiz kamu
+            url: '/quiz',          // ← sesuaikan route Sequiz kamu
             btnText: 'MAIN SEQUIZ',
             // Theme colors
             bg: 'linear-gradient(135deg, #0f0f2e 0%, #1a1a4e 50%, #0d0d1f 100%)',
@@ -395,9 +396,9 @@
             name: 'ARCHEGO',
             sub: 'Programming Puzzle',
             tag: 'BY ANDREW',
-            desc: 'Puzzle game berbasis logika pemrograman. Selesaikan setiap level dengan menyusun instruksi yang tepat untuk mengontrol pekerja robot di kantor.',
+            desc: 'Puzzle game berbasis logika pemrograman. Selesaikan setiap level dengan menyusun instruksi yang tepat.',
             icon: '🤖',
-            url: '/archego',         // ← sesuaikan route Archego (atau URL langsung)
+            url: '/play/archego',         
             btnText: 'MAIN ARCHEGO',
             bg: 'linear-gradient(135deg, #0f1a0f 0%, #0d2b1a 50%, #071410 100%)',
             accent: '#23a27e',
@@ -411,9 +412,9 @@
             name: 'OBSCURUM',
             sub: 'Cybersecurity Puzzle',
             tag: 'BY LEONARDUS',
-            desc: 'Game puzzle cybersecurity berbasis web. Gunakan skill developer tools, kriptografi, dan logika hacking untuk memecahkan 7 level yang menantang.',
+            desc: 'Game CTF cybersecurity berbasis web. Gunakan skill developer tools, kriptografi, dan logika hacking untuk memecahkan 7 level yang menantang.',
             icon: '🔐',
-            url: '/obscurum',        // ← sesuaikan route Obscurum
+            url: '/play/obscurum',
             btnText: 'MAIN OBSCURUM',
             bg: 'linear-gradient(135deg, #1a0a0a 0%, #2d1010 50%, #0f0808 100%)',
             accent: '#ef4444',
@@ -421,22 +422,6 @@
             btnBg: '#ef4444',
             btnColor: '#fff',
             titleColor: '#fca5a5',
-        },
-        {
-            id: 'about',
-            name: 'TENTANG',
-            sub: 'Info & Deskripsi',
-            tag: 'INFO',
-            desc: 'Pelajari lebih lanjut tentang Sequiz Hub — platform game edukatif yang menggabungkan tiga proyek menarik dari tim kami.',
-            icon: 'ℹ️',
-            url: '/about',           // ← atau halaman about Sequiz kamu
-            btnText: 'BACA SELENGKAPNYA',
-            bg: 'linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0f0f0f 100%)',
-            accent: '#f59e0b',
-            cardBg: 'linear-gradient(135deg, #1a1a1a, #f59e0b)',
-            btnBg: '#f59e0b',
-            btnColor: '#000',
-            titleColor: '#fbbf24',
         },
     ];
 
@@ -545,4 +530,3 @@
     buildCarousel();
     updateArrows();
 </script>
-</x-app-layout>

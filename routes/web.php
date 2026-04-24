@@ -105,7 +105,7 @@ Route::middleware('auth')->group(function () {
     |--------------------------------------------------------------------------
     */
     Route::get('/dashboard', function () {
-        return Inertia::render('dashboard');
+        return view('dashboard'); 
     })->name('dashboard');
 
     /*
@@ -125,19 +125,15 @@ Route::middleware('auth')->group(function () {
 
     // ARCHEGO — internal static files
     Route::get('/play/archego', function () {
-        return view('embed-game', [
-            'title' => 'Archego',
-            'src'   => '/games/archego/html/index.html',
-            'theme' => '#0074D9'
-        ]);
-    })->name('play.archego');
+        return redirect('/games/archego/html/index.html');
+    });
 
     // OBSCURUM — external project on port 8001
     Route::get('/play/obscurum', function () {
-        return redirect('http://127.0.0.1:8001');
+        return redirect('/level/1'); // ← sesuaikan URL Obscurum (bisa juga pakai view embed-game jika ingin iframe)
     });
 
-    Route::controller(LevelController::class)->group(function () {
+    Route::controller(LevelController::class)->group(function () {  
         Route::get('/level/{level}', 'show')->name('levels.show');
         Route::post('/level/{level}/check', 'checkAnswer')->name('levels.check');
         Route::post('/level/{level}/hint', 'getHint')->name('levels.hint');

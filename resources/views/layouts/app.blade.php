@@ -44,7 +44,7 @@
     <nav class="bg-gray-800 border-b border-gray-700">
         <div class="container mx-auto px-4">
             <div class="flex justify-between items-center h-16">
-                <a href="/" class="flex items-center space-x-2">
+                <a href="/dashboard" class="flex items-center space-x-2">
                     <span class="text-2xl">🔐</span>
                     <span class="text-xl font-bold text-white">Obscurum</span>
                 </a>
