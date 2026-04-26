@@ -19,12 +19,6 @@ const CameraIcon = () => (
     </svg>
 )
 
-const TrophyIcon = ({ className }) => (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className={className}>
-        <path fillRule="evenodd" d="M5.143 2.515A2.75 2.75 0 0 0 2.5 5.25v.297c0 .77.197 1.496.544 2.136a4.75 4.75 0 0 0 2.56 2.23 6.5 6.5 0 0 0 9.792 0 4.75 4.75 0 0 0 2.56-2.23 4.747 4.747 0 0 0 .544-2.136v-.297a2.75 2.75 0 0 0-2.643-2.735 45.75 45.75 0 0 0-10.714 0ZM12 14.75a8.001 8.001 0 0 1-6.192-3.036 6.25 6.25 0 0 0 .97 1.63 7.994 7.994 0 0 0 4.222 2.353V19.5h-2a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5h-2v-3.797a7.993 7.993 0 0 0 4.222-2.352 6.25 6.25 0 0 0 .97-1.631A8.001 8.001 0 0 1 12 14.75Z" clipRule="evenodd" />
-    </svg>
-)
-
 export default function Header({ role }) {
     const { url, props } = usePage()
     
@@ -32,10 +26,6 @@ export default function Header({ role }) {
     const [showLogoutPopup, setShowLogoutPopup] = useState(false)
     const [isEditing, setIsEditing] = useState(false) 
     const fileInputRef = useRef(null) 
-
-    const [showLeaderboard, setShowLeaderboard] = useState(false)
-    const [leaderboardData, setLeaderboardData] = useState([])
-    const [loadingLeaderboard, setLoadingLeaderboard] = useState(false)
 
     const auth = props?.auth ?? {};
     const user = auth?.user ?? null;
@@ -58,7 +48,6 @@ export default function Header({ role }) {
         { name: 'Home', href: '/' },
         { name: 'About', href: '/about' },
     ]
-
 
     const handleProfileClick = () => {
         if (!user) {
@@ -94,28 +83,15 @@ export default function Header({ role }) {
             preserveScroll: true,
         });
     }
-    const fetchLeaderboard = async () => {
-        setLoadingLeaderboard(true);
-        try {
-            const res = await axios.get('/leaderboard'); 
-            setLeaderboardData(res.data);
-        } catch (error) {
-            console.error("Failed to load leaderboard:", error);
-        } finally {
-            setLoadingLeaderboard(false);
-        }
-    }
-
-    useEffect(() => {
-        if (showLeaderboard) {
-            fetchLeaderboard();
-        }
-    }, [showLeaderboard]);
 
     return (
         <>
+            {/* =============================================
+                HEADER — warna diganti dari hijau (#035e17)
+                → dark neutral, konsisten dengan card item
+            ============================================= */}
             <div className="w-screen h-[10%] shadow-2xl fixed top-0 z-40">
-                <div className="w-full h-full bg-[#035e17] border-b border-[#42f566]/30">
+                <div className="w-full h-full bg-black/60 border-b border-white/10 backdrop-blur-sm">
                     <div className="flex ml-auto w-full md:w-[40%] lg:w-[30%] justify-center items-center h-full pr-8">
                         <div className="flex justify-evenly items-center text-xl md:text-2xl h-full w-[70%] text-white font-medium">
                             {links.map((item, i) => {
@@ -123,27 +99,20 @@ export default function Header({ role }) {
                                 return (
                                     <div
                                         key={i}
-                                        className={`cursor-pointer hover:text-[#42f566] transition duration-200 ease-in-out relative group
-                                        ${active ? 'text-[#1eff44]' : 'text-white'}`}>
+                                        className={`cursor-pointer hover:text-white/70 transition duration-200 ease-in-out relative group
+                                        ${active ? 'text-white' : 'text-white/60'}`}>
                                         <Link href={item.href}>{item.name}</Link>
-                                        <span className={`absolute -bottom-1 left-0 w-0 h-0.5 bg-[#42f566] transition-all duration-300 group-hover:w-full ${active ? 'w-full' : ''}`}></span>
+                                        <span className={`absolute -bottom-1 left-0 w-0 h-0.5 bg-white/50 transition-all duration-300 group-hover:w-full ${active ? 'w-full' : ''}`}></span>
                                     </div>
                                 )
                             })}
                         </div>
 
                         <div className="flex justify-center items-center h-full w-[30%] gap-4">
-                            
-                            <div 
-                                className="cursor-pointer text-yellow-400 hover:text-yellow-200 transition-colors p-2 rounded-full hover:bg-white/10 group relative"
-                                onClick={() => setShowLeaderboard(true)}
-                                title="Leaderboard"
-                            >
-                                <TrophyIcon className="w-8 h-8 drop-shadow-[0_0_8px_rgba(250,204,21,0.6)] group-hover:scale-110 transition-transform" />
-                            </div>
+                            {/* Leaderboard button DIHAPUS dari sini — dipindah ke halaman quiz */}
 
                             <div className="flex justify-center items-center cursor-pointer group" onClick={handleProfileClick}>
-                                <div className="p-1 rounded-full border-2 border-transparent group-hover:border-[#42f566] transition-all duration-300">
+                                <div className="p-1 rounded-full border-2 border-transparent group-hover:border-white/40 transition-all duration-300">
                                     {avatarUrl ? (
                                         <img src={avatarUrl} alt="Avatar" className="w-10 h-10 md:w-12 md:h-12 rounded-full border-2 border-white shadow-lg object-cover" />
                                     ) : (
@@ -155,94 +124,6 @@ export default function Header({ role }) {
                     </div>
                 </div>
             </div>
-
-            {showLeaderboard && (
-                <div className="fixed inset-0 backdrop-blur-sm bg-black/70 flex justify-center items-center z-50 transition-opacity duration-300"
-                     onClick={() => setShowLeaderboard(false)}>
-                    
-                    <div
-                        className="bg-[#0a0a0a] border-2 border-green-500 rounded-3xl w-[90%] md:w-[500px] h-[600px] shadow-[0_0_50px_rgba(34,197,94,0.3)] text-white overflow-hidden flex flex-col relative"
-                        onClick={(e) => e.stopPropagation()}>
-
-                        <div className="p-6 border-b border-green-500/30 bg-green-900/20 flex justify-between items-center">
-                            <div className="flex items-center gap-3">
-                                <TrophyIcon className="w-8 h-8 text-yellow-400" />
-                                <h2 className="text-2xl font-bold text-green-400 tracking-wider pixel-font">TOP AGENTS</h2>
-                            </div>
-                            <div onClick={() => setShowLeaderboard(false)} className="cursor-pointer text-gray-400 hover:text-white">
-                                <Close_Button className="w-6 h-6" />
-                            </div>
-                        </div>
-
-                        <div className="flex-1 overflow-y-auto p-4 scrollbar-thin scrollbar-thumb-green-600 scrollbar-track-gray-900">
-                            {loadingLeaderboard ? (
-                                <div className="flex flex-col justify-center items-center h-full text-green-500 gap-2">
-                                    <div className="w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div>
-                                    <p className="animate-pulse tracking-widest text-sm">RETRIEVING DATA...</p>
-                                </div>
-                            ) : (
-                                <div className="space-y-3">
-                                    {leaderboardData.map((agent, idx) => {
-                                        let rankColor = "text-white";
-                                        let bgClass = "bg-white/5 border-white/10";
-                                        let rankIcon = `#${idx + 1}`;
-
-                                        if (idx === 0) {
-                                            rankColor = "text-yellow-400";
-                                            bgClass = "bg-yellow-500/10 border-yellow-500/50";
-                                            rankIcon = "🥇";
-                                        } else if (idx === 1) {
-                                            rankColor = "text-gray-300";
-                                            bgClass = "bg-gray-500/10 border-gray-400/50";
-                                            rankIcon = "🥈";
-                                        } else if (idx === 2) {
-                                            rankColor = "text-orange-400";
-                                            bgClass = "bg-orange-500/10 border-orange-500/50";
-                                            rankIcon = "🥉";
-                                        }
-
-                                        const isMe = user && agent.name === user.name;
-                                        if (isMe) bgClass += " border-2 border-green-500 shadow-[0_0_15px_rgba(34,197,94,0.3)]";
-
-                                        return (
-                                            <div key={idx} className={`flex items-center justify-between p-3 rounded-xl border ${bgClass} transition-all hover:scale-[1.02] hover:bg-opacity-80`}>
-                                                <div className="flex items-center gap-4">
-                                                    <span className={`text-xl font-bold w-8 text-center ${rankColor} drop-shadow-md`}>{rankIcon}</span>
-                                                    <div className="flex items-center gap-3">
-                                                        <div className="w-10 h-10 rounded-full border border-white/20 overflow-hidden bg-gray-800">
-                                                            {agent.avatar ? (
-                                                                <img src={agent.avatar} className="w-full h-full object-cover" alt={agent.name}/>
-                                                            ) : (
-                                                                <Profil className="w-full h-full p-1 text-gray-400" />
-                                                            )}
-                                                        </div>
-                                                        <div>
-                                                            <p className={`font-bold text-sm md:text-base ${isMe ? 'text-green-400' : 'text-white'}`}>
-                                                                {truncate(agent.name, 15)} {isMe && <span className="text-[10px] bg-green-900 text-green-300 px-1 rounded ml-1">YOU</span>}
-                                                            </p>
-                                                            <p className="text-[10px] text-gray-400 uppercase tracking-wide">Cyber Agent</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div className="text-right">
-                                                    <p className="text-lg font-bold text-green-400 font-mono tracking-wide">
-                                                        {agent.score.toLocaleString()}
-                                                    </p>
-                                                    <p className="text-[10px] text-gray-500 uppercase font-bold">XP</p>
-                                                </div>
-                                            </div>
-                                        )
-                                    })}
-                                </div>
-                            )}
-                        </div>
-                        
-                        <div className="p-3 bg-black border-t border-green-900/30 text-center">
-                            <p className="text-[10px] text-gray-500 uppercase tracking-widest">Global Rankings • Live Update</p>
-                        </div>
-                    </div>
-                </div>
-            )}
 
             {showProfile && (
                 <div className="fixed inset-0 backdrop-blur-sm bg-black/60 flex justify-center items-center z-50 transition-opacity duration-300"

@@ -3,7 +3,6 @@ import { FlickeringGrid } from "../components/ui/flickering-grid";
 import MatrixBackground from "../components/ui/matrix-background";
 import { LayoutProvider, useLayout } from "./LayoutContext";
 import { usePage } from "@inertiajs/react";
-import Direction from "@/components/ui/direction";
 
 export default function AppLayout({ title, children }) {
     return (
@@ -15,7 +14,7 @@ export default function AppLayout({ title, children }) {
 
 function Shell({ children }) {
     const layout = useLayout() || {};
-    const { sharedValue } = layout; // FIX: dari context, bukan hardcode true
+    const { sharedValue } = layout;
     const routes = layout.routes ?? [];
     const page = usePage() || {};
     const component = page.component ?? "";
@@ -46,7 +45,6 @@ function Shell({ children }) {
                 !shouldHideHeader &&
                 (
                     <>
-                        <Direction />
                         <Header />
                     </>
                 )
