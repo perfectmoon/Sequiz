@@ -8,34 +8,138 @@
   <link rel="stylesheet" href="../css/style.css">
   <style>
 
-    /* ── INFO MODAL ── */
-    .info-overlay {
+    /* ── MATRIX CANVAS ── */
+    #matrixCanvas {
       position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.88);
-      z-index: 200;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* Override body::before dot-grid (optional: keep or remove) */
+    body::before { display: none; }
+
+    /* Make sure nav/main/footer sit above canvas */
+    nav, main, footer { position: relative; z-index: 2; }
+
+    nav {
+      background: rgba(15, 15, 17, 0.92) !important;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+    footer {
+      background: rgba(15, 15, 17, 0.88);
+    }
+
+    /* ── HERO BOX ── */
+    .hero-box {
+      position: relative;
+      background: rgba(15, 15, 17, 0.80);
+      border: 1.5px solid rgba(35, 162, 126, 0.30);
+      border-radius: 16px;
+      padding: 52px 56px 48px;
+      margin-bottom: 48px;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      overflow: hidden;
+    }
+
+    .hero-eyebrow {
+      font-size: 10px;
+      letter-spacing: 4px;
+      color: var(--panel4);
+      text-transform: uppercase;
+      font-weight: 700;
+      margin-bottom: 18px;
       display: flex;
       align-items: center;
-      justify-content: center;
-      opacity: 0;
-      pointer-events: none;
+      gap: 12px;
+    }
+    .hero-eyebrow::before {
+      content: '';
+      display: inline-block;
+      width: 32px; height: 1.5px;
+      background: var(--panel4);
+      border-radius: 2px;
+    }
+
+    .hero-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 72px;
+      font-weight: 900;
+      color: var(--panel4);
+      line-height: 0.88;
+      letter-spacing: -3px;
+      margin-bottom: 10px;
+    }
+
+    .hero-tagline {
+      font-size: 11px;
+      letter-spacing: 5px;
+      color: var(--text2);
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-bottom: 32px;
+    }
+
+    .hero-divider {
+      width: 40px; height: 2px;
+      background: var(--panel4);
+      border-radius: 2px;
+      margin-bottom: 24px;
+      opacity: 0.55;
+    }
+
+    .hero-desc {
+      font-size: 15px;
+      color: var(--text2);
+      line-height: 1.8;
+      font-weight: 400;
+      max-width: 700px;
+    }
+
+    /* ── LEVELS HEADER ── */
+    .levels-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    .levels-label {
+      font-size: 10px;
+      letter-spacing: 3px;
+      color: var(--panel4);
+      text-transform: uppercase;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .levels-line {
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ── INFO MODAL ── */
+    .info-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.88);
+      z-index: 200;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
       transition: opacity 0.3s;
       backdrop-filter: blur(6px);
     }
     .info-overlay.open { opacity: 1; pointer-events: all; }
-
     .info-modal {
       position: relative;
       background: var(--panel);
       border: 1.5px solid var(--border);
       border-radius: 18px;
-      width: 680px;
-      max-width: 92vw;
-      max-height: 85vh;
-      overflow-y: auto;
-      overflow-x: hidden;
+      width: 680px; max-width: 92vw; max-height: 85vh;
+      overflow-y: auto; overflow-x: hidden;
       transform: translateY(30px) scale(0.97);
-      transition: transform 0.35s cubic-bezier(0.23, 1, 0.32, 1);
+      transition: transform 0.35s cubic-bezier(0.23,1,0.32,1);
       scrollbar-width: thin;
       scrollbar-color: var(--border) transparent;
     }
@@ -47,14 +151,13 @@
       content: ''; position: sticky; left: 0; right: 0; height: 32px;
       display: block; pointer-events: none; z-index: 5; flex-shrink: 0;
     }
-    .info-modal::before { top: 0; background: linear-gradient(to bottom, var(--panel), transparent); margin-bottom: -32px; }
-    .info-modal::after  { bottom: 0; background: linear-gradient(to top, var(--panel), transparent); margin-top: -32px; }
+    .info-modal::before { top: 0; background: linear-gradient(to bottom,var(--panel),transparent); margin-bottom: -32px; }
+    .info-modal::after  { bottom: 0; background: linear-gradient(to top,var(--panel),transparent); margin-top: -32px; }
     .info-overlay.open .info-modal { transform: translateY(0) scale(1); }
-
-    .info-modal-header { height: 4px; background: linear-gradient(90deg, var(--panel4), var(--blue3)); flex-shrink: 0; }
+    .info-modal-header { height: 4px; background: linear-gradient(90deg,var(--panel4),var(--blue3)); flex-shrink: 0; }
     .info-modal-body { padding: 36px 40px 40px; }
     .info-tag { font-size: 11px; letter-spacing: 3px; color: var(--blue3); text-transform: uppercase; font-weight: 700; margin-bottom: 10px; }
-    .info-title { font-family: 'Montserrat', sans-serif; font-size: 34px; font-weight: 900; color: var(--text); line-height: 1.05; margin-bottom: 6px; }
+    .info-title { font-family:'Montserrat',sans-serif; font-size: 34px; font-weight: 900; color: var(--text); line-height: 1.05; margin-bottom: 6px; }
     .info-subtitle { font-size: 15px; font-weight: 600; color: var(--panel4); letter-spacing: 0.5px; margin-bottom: 24px; }
     .info-divider { height: 1.5px; background: var(--border); border-radius: 2px; margin-bottom: 24px; }
     .info-section { margin-bottom: 28px; }
@@ -74,35 +177,27 @@
 
     /* ── ABOUT MODAL ── */
     .about-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.88);
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.88);
       z-index: 200;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      pointer-events: none;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
       transition: opacity 0.3s;
       backdrop-filter: blur(6px);
     }
     .about-overlay.open { opacity: 1; pointer-events: all; }
-
     .about-modal {
       position: relative;
       background: var(--panel);
       border: 1.5px solid var(--border);
       border-radius: 18px;
-      width: 900px;
-      max-width: 94vw;
+      width: 900px; max-width: 94vw;
       overflow: hidden;
       transform: translateY(30px) scale(0.97);
-      transition: transform 0.35s cubic-bezier(0.23, 1, 0.32, 1);
+      transition: transform 0.35s cubic-bezier(0.23,1,0.32,1);
     }
     .about-overlay.open .about-modal { transform: translateY(0) scale(1); }
-
-    .about-modal-header { height: 4px; background: linear-gradient(90deg, var(--blue3), var(--panel4)); }
-
+    .about-modal-header { height: 4px; background: linear-gradient(90deg,var(--blue3),var(--panel4)); }
     .about-close {
       position: absolute; top: 14px; right: 16px;
       width: 32px; height: 32px; border-radius: 50%;
@@ -112,26 +207,14 @@
       transition: all 0.2s; z-index: 10;
     }
     .about-close:hover { border-color: var(--blue3); color: var(--blue3); }
-
     .about-modal-body { padding: 44px 52px 52px; }
-
-    .about-eyebrow {
-      font-size: 10px; letter-spacing: 3px; color: var(--blue3);
-      text-transform: uppercase; font-weight: 700; margin-bottom: 14px;
-    }
-
-    .about-main-title {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 52px; font-weight: 900; color: var(--text);
-      line-height: 0.9; margin-bottom: 10px; letter-spacing: -1px;
-    }
-    .about-main-title span { color: var(--panel4); }
-
+    .about-main-title { font-family:'Montserrat',sans-serif; font-size: 52px; font-weight: 900; color: var(--text); line-height: 0.9; margin-bottom: 10px; letter-spacing: -1px; }
     .about-divider-h { height: 1.5px; background: var(--border); margin: 28px 0; }
-
     .about-desc { font-size: 15px; color: var(--text2); line-height: 1.85; font-weight: 400; }
 
     @media (max-width: 700px) {
+      .hero-box { padding: 32px 24px 30px; }
+      .hero-title { font-size: 44px; letter-spacing: -1px; }
       .about-modal-body { padding: 28px 24px 36px; }
       .about-main-title { font-size: 36px; }
     }
@@ -140,30 +223,46 @@
 </head>
 <body>
 
+  <!-- MATRIX CANVAS -->
+  <canvas id="matrixCanvas"></canvas>
+
   <nav>
-    <a class="logo" href="/dashboard">ARCHEGO</a>
-<button class="nav-btn" onclick="window.location.href='/dashboard'">
-  <img src="../assets/btn-home.png" alt="Home">
-</button>
-<button class="nav-btn" id="btnInfoOpen">
-  <img src="../assets/btn-info.png" alt="Info">
-</button>
-<button class="nav-btn" id="btnAboutOpen">
-  <img src="../assets/btn-help.png" alt="Help">
-</button>
+    <a class="logo" href="#">ARCHEGO</a>
+    <button class="nav-btn">
+      <img src="../assets/btn-home.png" alt="Home">
+    </button>
+    <button class="nav-btn" id="btnInfoOpen">
+      <img src="../assets/btn-info.png" alt="Info">
+    </button>
+    <button class="nav-btn" id="btnAboutOpen">
+      <img src="../assets/btn-help.png" alt="Help">
+    </button>
   </nav>
 
   <main>
-    <div class="section-header">
-      <div class="section-title">ARCHEGO</div>
-      <div class="section-tag">-Think Like a Machine-</div>
-      <div class="section-desc">Archego is a programming puzzle game where players think like a machine. Using a limited set of instructions, players design logical workflows that transform incoming data into precise results. Every level challenges players to break problems into small, structured steps, revealing how simple commands combine to form powerful algorithms.</div>
+
+    <!-- HERO BOX -->
+    <div class="hero-box">
+      <div class="hero-eyebrow">Programming Puzzle Game</div>
+      <div class="hero-title">ARCHEGO</div>
+      <div class="hero-tagline">— Think Like a Machine —</div>
+      <div class="hero-divider"></div>
+      <div class="hero-desc">
+        Archego is a programming puzzle game where players think like a machine. Using a limited set of instructions, players design logical workflows that transform incoming data into precise results. Every level challenges players to break problems into small, structured steps, revealing how simple commands combine to form powerful algorithms.
+      </div>
+
+      <!-- LEVEL GRID inside hero-box -->
+      <div class="levels-header" style="margin-top: 40px;">
+        <div class="levels-label">Select Level</div>
+        <div class="levels-line"></div>
+      </div>
+      <div class="level-grid" id="levelGrid"></div>
+
     </div>
 
-    <div class="level-grid" id="levelGrid"></div>
   </main>
 
-  <footer>ARCHEGO &mdash; INTERNSHIP PROJECT &mdash; 2026</footer>
+  <!-- <footer>ARCHEGO &mdash; INTERNSHIP PROJECT &mdash; 2026</footer> -->
 
   <!-- LEVEL DETAIL OVERLAY -->
   <div class="level-overlay" id="overlay">
@@ -197,12 +296,10 @@
       <div class="info-modal-header"></div>
       <button class="info-close" id="btnInfoClose">✕</button>
       <div class="info-modal-body">
-
         <div class="info-tag">About the Game</div>
-        <div class="info-title">ARCHEGO - INFORMATION </div>
+        <div class="info-title">ARCHEGO - INFORMATION</div>
         <div class="info-subtitle">Think Like a Machine</div>
         <div class="info-divider"></div>
-
         <div class="info-section">
           <div class="info-section-title">Instruction Explanation</div>
           <div class="info-section-text">
@@ -221,15 +318,10 @@
             </ul>
           </div>
         </div>
-
         <div class="info-section">
           <div class="info-section-title">FAQ</div>
-          <div class="info-section-text">
-            
-              If you have question, keep it for your self...
-          </div>
+          <div class="info-section-text">If you have question, keep it for your self...</div>
         </div>
-
         <div class="info-section">
           <div class="info-section-title">Credit</div>
           <div class="info-section-text">
@@ -239,7 +331,6 @@
             </ul>
           </div>
         </div>
-
       </div>
     </div>
   </div>
@@ -260,26 +351,72 @@
   </div>
 
   <script src="../js/script.js"></script>
+
   <script>
-    // INFO modal
+    /* ════════════════════════════════
+       MATRIX BACKGROUND
+    ════════════════════════════════ */
+    (function () {
+      const canvas = document.getElementById('matrixCanvas');
+      const ctx = canvas.getContext('2d');
+
+      const resize = () => {
+        canvas.width  = window.innerWidth;
+        canvas.height = window.innerHeight;
+      };
+      window.addEventListener('resize', resize);
+      resize();
+
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$+-*/=%"\'#&_(),.;:?!|{}<>[]^~';
+      const BASE_FONT = 16;
+      let rows, xsPx, baseSpeeds;
+
+      const init = () => {
+        rows = Math.max(1, Math.floor(canvas.height / BASE_FONT));
+        xsPx = Array.from({ length: rows }, () => Math.random() * canvas.width);
+        baseSpeeds = Array.from({ length: rows }, () => 0.5 + Math.random() * 0.9);
+      };
+      init();
+      window.addEventListener('resize', init);
+
+      const draw = () => {
+        ctx.fillStyle = 'rgba(0,0,0,0.05)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        ctx.font = `${BASE_FONT}px monospace`;
+        ctx.fillStyle = 'rgb(0,255,0)';
+
+        for (let i = 0; i < rows; i++) {
+          const ch = chars[Math.floor(Math.random() * chars.length)];
+          ctx.fillText(ch, xsPx[i], i * BASE_FONT);
+
+          xsPx[i] += baseSpeeds[i] * BASE_FONT;
+          if (Math.random() > 0.985) xsPx[i] += BASE_FONT * 0.5;
+          if (xsPx[i] >= canvas.width) xsPx[i] -= canvas.width;
+          if (xsPx[i] < 0) xsPx[i] += canvas.width;
+        }
+      };
+
+      setInterval(draw, 35);
+    })();
+
+    /* ════════════════════════════════
+       MODALS
+    ════════════════════════════════ */
     const infoOverlay  = document.getElementById('infoOverlay');
     const btnInfoOpen  = document.getElementById('btnInfoOpen');
     const btnInfoClose = document.getElementById('btnInfoClose');
-
     btnInfoOpen.addEventListener('click',  () => infoOverlay.classList.add('open'));
     btnInfoClose.addEventListener('click', () => infoOverlay.classList.remove('open'));
     infoOverlay.addEventListener('click',  (e) => { if (e.target === infoOverlay) infoOverlay.classList.remove('open'); });
 
-    // ABOUT modal
     const aboutOverlay  = document.getElementById('aboutOverlay');
     const btnAboutOpen  = document.getElementById('btnAboutOpen');
     const btnAboutClose = document.getElementById('btnAboutClose');
-
     btnAboutOpen.addEventListener('click',  () => aboutOverlay.classList.add('open'));
     btnAboutClose.addEventListener('click', () => aboutOverlay.classList.remove('open'));
     aboutOverlay.addEventListener('click',  (e) => { if (e.target === aboutOverlay) aboutOverlay.classList.remove('open'); });
 
-    // ESC closes both
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
         infoOverlay.classList.remove('open');
@@ -287,5 +424,6 @@
       }
     });
   </script>
+
 </body>
 </html>
