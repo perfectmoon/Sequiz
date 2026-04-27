@@ -137,7 +137,7 @@ Route::middleware('auth')->group(function () {
 
     // Obscurum (external Laravel di port 8001)
     Route::get('/play/obscurum', function () {
-        return redirect('http://127.0.0.1:8001');
+        return redirect('/level/1');
     });
 
     /*

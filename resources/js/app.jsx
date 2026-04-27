@@ -7,8 +7,18 @@ import '../css/app.css';
 createInertiaApp({
   resolve: async (name) => {
     const pages = import.meta.glob('./Pages/**/*.jsx');
-    const page = await pages[`./Pages/${name}.jsx`]();
+    let pagePath = `./Pages/${name}.jsx`;
     
+    if (!pages[pagePath]) {
+      pagePath = `./Pages/Levels/${name}.jsx`;
+    }
+    
+    if (!pages[pagePath] && name.startsWith('Levels/')) {
+      const cleanName = name.replace('Levels/', '');
+      pagePath = `./Pages/Levels/${cleanName}.jsx`;
+    }
+    
+    const page = await pages[pagePath]();
     page.default.layout ??= (el) => <AppLayout>{el}</AppLayout>;
     return page;
   },

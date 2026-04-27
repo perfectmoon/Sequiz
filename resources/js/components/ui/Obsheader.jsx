@@ -22,6 +22,9 @@ const CameraIcon = () => (
 export default function Header({ role }) {
     const { url, props } = usePage()
     
+    // Get CSRF token from meta tag
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+    
     const [showProfile, setShowProfile] = useState(false)
     const [showLogoutPopup, setShowLogoutPopup] = useState(false)
     const [isEditing, setIsEditing] = useState(false) 
@@ -86,44 +89,61 @@ export default function Header({ role }) {
 
     return (
         <>
-            {/* =============================================
-                HEADER — warna diganti dari hijau (#035e17)
-                → dark neutral, konsisten dengan card item
-            ============================================= */}
-            <div className="w-screen h-[10%] shadow-2xl fixed top-0 z-40">
-                <div className="w-full h-full bg-black/60 border-b border-white/10 backdrop-blur-sm">
-                    <div className="flex ml-auto w-full md:w-[40%] lg:w-[30%] justify-center items-center h-full pr-8">
-                        <div className="flex justify-evenly items-center text-xl md:text-2xl h-full w-[70%] text-white font-medium">
-                            {links.map((item, i) => {
-                                const active = url === item.href;
-                                return (
-                                    <div
-                                        key={i}
-                                        className={`cursor-pointer hover:text-white/70 transition duration-200 ease-in-out relative group
-                                        ${active ? 'text-white' : 'text-white/60'}`}>
-                                        <Link href={item.href}>{item.name}</Link>
-                                        <span className={`absolute -bottom-1 left-0 w-0 h-0.5 bg-white/50 transition-all duration-300 group-hover:w-full ${active ? 'w-full' : ''}`}></span>
-                                    </div>
-                                )
-                            })}
-                        </div>
-
-                        <div className="flex justify-center items-center h-full w-[30%] gap-4">
-                            {/* Leaderboard button DIHAPUS dari sini — dipindah ke halaman quiz */}
-
-                            <div className="flex justify-center items-center cursor-pointer group" onClick={handleProfileClick}>
-                                <div className="p-1 rounded-full border-2 border-transparent group-hover:border-white/40 transition-all duration-300">
-                                    {avatarUrl ? (
-                                        <img src={avatarUrl} alt="Avatar" className="w-10 h-10 md:w-12 md:h-12 rounded-full border-2 border-white shadow-lg object-cover" />
-                                    ) : (
-                                        <Profil className="w-10 h-10 md:w-12 md:h-12 rounded-full border-2 border-white shadow-lg" />
-                                    )}
-                                </div>
+            <div className="w-screen h-16 shadow-2xl fixed top-0 z-40 bg-black">
+                <div className="container mx-auto px-4 h-full">
+                    <div className="flex justify-between items-center h-full">
+                        <Link href="/dashboard" className="flex items-center space-x-2">
+                            <button 
+                                onClick={() => {
+                                    if (confirm('Back to Menu?')) {
+                                        fetch('/reset-progress', {
+                                            method: 'POST',
+                                            headers: { 'X-CSRF-TOKEN': csrfToken }
+                                        }).then(() => window.location.href = '/dashboard')
+                                    }
+                                }}
+                                className="bg-red-600 hover:bg-black-700 text-white px-3 py-1 rounded-lg text-sm transition"
+                            >
+                                <i className="fas fa-redo-alt"></i> Back
+                            </button>
+                            <span className="text-xl font-bold text-white">Obscurum</span>
+                        </Link>
+                        
+                        <div className="flex items-center space-x-6">
+                            {/* Points Display */}
+                            <div className="flex items-center space-x-2 bg-yellow-900 px-3 py-1 rounded-lg">
+                                <i className="fas fa-star text-yellow-400"></i>
+                                <span id="pointsDisplay" className="text-yellow-400 font-bold">0</span>
+                                <span className="text-gray-400 text-sm">points</span>
                             </div>
+                            
+                            {/* Progress Display */}
+                            <div className="flex items-center space-x-2 bg-blue-900 px-3 py-1 rounded-lg">
+                                <i className="fas fa-trophy text-blue-400"></i>
+                                <span className="text-blue-400 font-bold">0</span>
+                                <span className="text-gray-400 text-sm">/7 levels</span>
+                            </div>
+                            
+                            {/* Reset button */}
+                            <button 
+                                onClick={() => {
+                                    if (confirm('Reset all progress?')) {
+                                        fetch('/reset-progress', {
+                                            method: 'POST',
+                                            headers: { 'X-CSRF-TOKEN': csrfToken }
+                                        }).then(() => window.location.href = '/level/1')
+                                    }
+                                }}
+                                className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-lg text-sm transition"
+                            >
+                                <i className="fas fa-redo-alt"></i> Reset
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
+
+            {/* No profile popup for levels - simplified header */}
 
             {showProfile && (
                 <div className="fixed inset-0 backdrop-blur-sm bg-black/60 flex justify-center items-center z-50 transition-opacity duration-300"

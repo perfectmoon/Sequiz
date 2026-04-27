@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Schema;
 use App\Models\Level;
 use App\Models\Hint;
+use Inertia\Inertia;
 
 class LevelController extends Controller
 {
@@ -33,10 +34,12 @@ class LevelController extends Controller
         // Get hint usage for this level
         $usedHints = session("hints_used_level_{$levelNumber}", []);
         
-        return view("levels.level{$levelNumber}", [
+        // Return Inertia view instead of Blade
+        return Inertia::render('Levels/Level' . $levelNumber, [
             'level' => $level,
             'hints' => $hints,
-            'usedHints' => $usedHints
+            'usedHints' => $usedHints,
+            'csrfToken' => csrf_token()
         ]);
     }
 
@@ -151,23 +154,33 @@ class LevelController extends Controller
         
         // Track hint usage and deduct points
         $usedHints = session("hints_used_level_{$levelNumber}", []);
+        $cost = 0;
+        
         if (!in_array($hintNumber, $usedHints)) {
             $usedHints[] = $hintNumber;
             session(["hints_used_level_{$levelNumber}" => $usedHints]);
             
-            // Deduct points for hint usage (progressive: hint 1 = 5pts, hint 2 = 10pts, hint 3 = 15pts, etc.)
-            $currentPoints = session('total_points', 0);
-            $hintCost = $hintNumber * 5; // Progressive cost: 5, 10, 15, 20, etc.
-            $newPoints = max(0, $currentPoints - $hintCost);
-            session(['total_points' => $newPoints]);
+            // Deduct points for hint usage
+            if ($levelNumber == 1) {
+                $cost = 0; // Free hints for level 1
+            } else {
+                $cost = $hintNumber * 5; // Progressive cost: 5, 10, 15, 20, etc.
+            }
+            
+            if ($cost > 0) {
+                $currentPoints = session('total_points', 0);
+                $newPoints = max(0, $currentPoints - $cost);
+                session(['total_points' => $newPoints]);
+            }
         }
         
         return response()->json([
             'success' => true,
             'hint' => $hint->hint_text,
             'hint_number' => $hint->order ?? $hint->hint_number,
-            'cost' => $hintNumber * 5, // Progressive cost
-            'hints_used_count' => count($usedHints)
+            'cost' => $cost,
+            'hints_used_count' => count($usedHints),
+            'total_points' => session('total_points', 0)
         ]);
     }
 
@@ -183,7 +196,10 @@ class LevelController extends Controller
         $totalCompleted = count($completedLevels);
         $totalPoints = session('total_points', 0);
         
-        return view('levels.complete', compact('totalCompleted', 'totalPoints'));
+        return Inertia::render('Levels/Complete', [
+            'totalCompleted' => $totalCompleted,
+            'totalPoints' => $totalPoints
+        ]);
     }
     
     public function showPoints()
