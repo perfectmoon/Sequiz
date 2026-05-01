@@ -19,7 +19,7 @@ const CameraIcon = () => (
     </svg>
 )
 
-export default function Header({ role }) {
+export default function Header({ role, totalPoints = 0, completedLevels = [] }) {
     const { url, props } = usePage()
     
     // Get CSRF token from meta tag
@@ -109,18 +109,18 @@ export default function Header({ role }) {
                             <span className="text-xl font-bold text-white">Obscurum</span>
                         </Link>
                         
-                        <div className="flex items-center space-x-6">
+<div className="flex items-center space-x-6">
                             {/* Points Display */}
                             <div className="flex items-center space-x-2 bg-yellow-900 px-3 py-1 rounded-lg">
                                 <i className="fas fa-star text-yellow-400"></i>
-                                <span id="pointsDisplay" className="text-yellow-400 font-bold">0</span>
+                                <span id="pointsDisplay" className="text-yellow-400 font-bold">{totalPoints}</span>
                                 <span className="text-gray-400 text-sm">points</span>
                             </div>
                             
                             {/* Progress Display */}
                             <div className="flex items-center space-x-2 bg-blue-900 px-3 py-1 rounded-lg">
                                 <i className="fas fa-trophy text-blue-400"></i>
-                                <span className="text-blue-400 font-bold">0</span>
+                                <span className="text-blue-400 font-bold">{completedLevels?.length || 0}</span>
                                 <span className="text-gray-400 text-sm">/7 levels</span>
                             </div>
                             

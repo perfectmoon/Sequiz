@@ -31,15 +31,21 @@ class LevelController extends Controller
             ->orderBy('order')
             ->get();
         
-        // Get hint usage for this level
+// Get hint usage for this level
         $usedHints = session("hints_used_level_{$levelNumber}", []);
         
-        // Return Inertia view instead of Blade
-        return Inertia::render('Levels/Level' . $levelNumber, [
+        // Get session data for real-time display
+        $totalPoints = session('total_points', 0);
+        $completedLevels = session('completed_levels', []);
+        
+// Return Blade view instead of Inertia
+        return view('levels.level' . $levelNumber, [
             'level' => $level,
             'hints' => $hints,
             'usedHints' => $usedHints,
-            'csrfToken' => csrf_token()
+            'csrfToken' => csrf_token(),
+            'totalPoints' => $totalPoints,
+            'completedLevels' => $completedLevels
         ]);
     }
 
@@ -190,13 +196,13 @@ class LevelController extends Controller
         return response()->json(['success' => true]);
     }
 
-    public function complete()
+public function complete()
     {
         $completedLevels = session('completed_levels', []);
         $totalCompleted = count($completedLevels);
         $totalPoints = session('total_points', 0);
         
-        return Inertia::render('Levels/Complete', [
+        return view('levels.complete', [
             'totalCompleted' => $totalCompleted,
             'totalPoints' => $totalPoints
         ]);

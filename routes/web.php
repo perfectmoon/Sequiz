@@ -140,20 +140,20 @@ Route::middleware('auth')->group(function () {
         return redirect('/level/1');
     });
 
-    /*
-    |--------------------------------------------------------------------------
-    | OBSCURUM INTERNAL (kalau mau embed nanti)
-    |--------------------------------------------------------------------------
-    */
-    Route::controller(LevelController::class)->group(function () {
-        Route::get('/level/{level}', 'show')->name('levels.show');
-        Route::post('/level/{level}/check', 'checkAnswer')->name('levels.check');
-        Route::post('/level/{level}/hint', 'getHint')->name('levels.hint');
-        Route::post('/reset-progress', 'resetProgress')->name('reset.progress');
-        Route::get('/debug-points', 'showPoints')->name('debug.points');
-        Route::get('/complete', 'complete')->name('levels.complete');
-    });
+});
 
+/*
+|--------------------------------------------------------------------------
+| OBSCURUM LEVELS ( Public - No Auth Required )
+|--------------------------------------------------------------------------
+*/
+Route::controller(LevelController::class)->group(function () {
+    Route::get('/level/{level}', 'show')->name('levels.show');
+    Route::post('/level/{level}/check', 'checkAnswer')->name('levels.check');
+    Route::post('/level/{level}/hint', 'getHint')->name('levels.hint');
+    Route::post('/reset-progress', 'resetProgress')->name('reset.progress');
+    Route::get('/debug-points', 'showPoints')->name('debug.points');
+    Route::get('/complete', 'complete')->name('levels.complete');
 });
 
 /*
